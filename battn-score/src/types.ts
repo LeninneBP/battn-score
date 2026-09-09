@@ -29,7 +29,6 @@ export type MatchState = {
   scoreB: number;
   /** Meta della partita (11 / 16 / 21). */
   targetScore: TargetScore;
-  markedNineteen: TeamId | null;
   stake: number;
   isOrbi: boolean;
   orbiCaller: TeamId | null;
@@ -89,7 +88,6 @@ export function createInitialMatch(
     scoreA: 0,
     scoreB: 0,
     targetScore,
-    markedNineteen: null,
     stake: BASE_STAKE,
     isOrbi: false,
     orbiCaller: null,

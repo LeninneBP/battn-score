@@ -14,6 +14,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppButton } from '../components/AppButton';
 import { BattnLogo } from '../components/BattnLogo';
+import { isMarkedX } from '../gameLogic';
 import { useGame } from '../state/GameContext';
 import { colors, fonts, spacing } from '../theme';
 import { TeamId, xMarkFor } from '../types';
@@ -145,8 +146,8 @@ export function ScoreScreen({ onHome }: { onHome: () => void }) {
     );
   }
 
-  const markA = state.markedNineteen === 'a';
-  const markB = state.markedNineteen === 'b';
+  const markA = isMarkedX(state, 'a');
+  const markB = isMarkedX(state, 'b');
   // La serie parte solo dalla prima rivincita.
   const seriesActive = state.matchesWonA + state.matchesWonB > 0;
   const orbiWho =

@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import {
+  adjustPoints,
   awardTurn,
   beginNormalTurn,
   beginOrbiTurn,
   createInitialMatch,
   foldTurn,
+  isMarkedX,
   raiseStake,
   refuseOrbi,
   rematch,
@@ -35,7 +37,8 @@ s = beginNormalTurn(s);
 s = setStake(s, 15);
 s = awardTurn(s, 'a');
 assert.equal(s.scoreA, 19);
-assert.equal(s.markedNineteen, 'a');
+assert.equal(isMarkedX(s, 'a'), true);
+assert.equal(isMarkedX(s, 'b'), false);
 
 s = beginNormalTurn(s);
 assert.equal(s.stake, 3);
@@ -68,11 +71,32 @@ short = beginNormalTurn(short);
 short = setStake(short, 9);
 short = awardTurn(short, 'a');
 assert.equal(short.scoreA, 9);
-assert.equal(short.markedNineteen, 'a');
+assert.equal(isMarkedX(short, 'a'), true);
 short = beginNormalTurn(short);
 short = setStake(short, 2);
 short = awardTurn(short, 'a');
 assert.equal(short.winner, 'a');
 assert.equal(short.targetScore, 11);
+
+// La X vale per tutte e due le coppie, e una rettifica in meno la toglie.
+let both = startMatch(createInitialMatch('A', 'B', 11), 'A', 'B');
+both = beginNormalTurn(both);
+both = setStake(both, 9);
+both = awardTurn(both, 'a');
+both = beginNormalTurn(both);
+both = setStake(both, 9);
+both = awardTurn(both, 'b');
+assert.equal(isMarkedX(both, 'a'), true);
+assert.equal(isMarkedX(both, 'b'), true);
+
+const corrected = adjustPoints(both, 'b', -1);
+assert.equal(isMarkedX(corrected, 'b'), false);
+assert.equal(isMarkedX(corrected, 'a'), true);
+
+// Con entrambe in X lo sconto dell'abbandono vale anche per la seconda coppia.
+let folded = beginNormalTurn(both);
+assert.equal(folded.stake, 3);
+folded = foldTurn(folded, 'b');
+assert.equal(folded.scoreA, 11);
 
 console.log('gameLogic ok');

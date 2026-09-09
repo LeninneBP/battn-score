@@ -14,8 +14,18 @@ export { createInitialMatch } from './types';
 
 const uid = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
+/**
+ * La X non è un gettone: una coppia è in X finché il suo punteggio sta a due
+ * punti dalla meta. Vale per entrambe le coppie e sparisce se si corregge il
+ * punteggio verso il basso.
+ */
+export function isMarkedX(state: MatchState, team: TeamId): boolean {
+  const score = team === 'a' ? state.scoreA : state.scoreB;
+  return score >= xMarkFor(state.targetScore);
+}
+
 export function currentBaseStake(state: MatchState): number {
-  return state.markedNineteen ? POST_NINETEEN_BASE : BASE_STAKE;
+  return isMarkedX(state, 'a') || isMarkedX(state, 'b') ? POST_NINETEEN_BASE : BASE_STAKE;
 }
 
 function teamName(state: MatchState, team: TeamId): string {
@@ -40,11 +50,7 @@ function applyScore(
   else scoreB += points;
 
   const xMark = xMarkFor(state.targetScore);
-  let markedNineteen = state.markedNineteen;
-  if (!markedNineteen) {
-    if (scoreA >= xMark) markedNineteen = 'a';
-    else if (scoreB >= xMark) markedNineteen = 'b';
-  }
+  const anyMarked = scoreA >= xMark || scoreB >= xMark;
 
   let winner: TeamId | null = null;
   if (scoreA >= state.targetScore) winner = 'a';
@@ -65,13 +71,12 @@ function applyScore(
     ...state,
     scoreA,
     scoreB,
-    markedNineteen,
     winner,
     history: [entry, ...state.history],
     turnActive: false,
     isOrbi: false,
     orbiCaller: null,
-    stake: markedNineteen ? POST_NINETEEN_BASE : BASE_STAKE,
+    stake: anyMarked ? POST_NINETEEN_BASE : BASE_STAKE,
     tricksA: 0,
     tricksB: 0,
   };
@@ -174,11 +179,7 @@ export function foldTurn(state: MatchState, foldingTeam: TeamId): MatchState {
   const winner: TeamId = foldingTeam === 'a' ? 'b' : 'a';
   let points = state.stake;
 
-  if (
-    state.markedNineteen === foldingTeam &&
-    state.stake === POST_NINETEEN_BASE &&
-    !state.isOrbi
-  ) {
+  if (isMarkedX(state, foldingTeam) && state.stake === POST_NINETEEN_BASE && !state.isOrbi) {
     points = 2;
   }
 
@@ -208,15 +209,6 @@ export function adjustPoints(
   if (team === 'a') scoreA = Math.max(0, scoreA + delta);
   else scoreB = Math.max(0, scoreB + delta);
 
-  const xMark = xMarkFor(state.targetScore);
-  let markedNineteen = state.markedNineteen;
-  if (!markedNineteen) {
-    if (scoreA >= xMark) markedNineteen = 'a';
-    else if (scoreB >= xMark) markedNineteen = 'b';
-  } else if (scoreA < xMark && scoreB < xMark) {
-    markedNineteen = null;
-  }
-
   let winner: TeamId | null = null;
   if (scoreA >= state.targetScore) winner = 'a';
   else if (scoreB >= state.targetScore) winner = 'b';
@@ -237,7 +229,6 @@ export function adjustPoints(
     ...state,
     scoreA,
     scoreB,
-    markedNineteen,
     winner,
     history: [entry, ...state.history],
   };
@@ -246,7 +237,6 @@ export function adjustPoints(
 export function undoLast(state: MatchState): MatchState {
   if (state.history.length === 0) return state;
   const [, ...rest] = state.history;
-  const xMark = xMarkFor(state.targetScore);
 
   let rebuilt: MatchState = {
     ...createInitialMatch(state.teamAName, state.teamBName, state.targetScore),
@@ -262,13 +252,6 @@ export function undoLast(state: MatchState): MatchState {
       scoreB: entry.scoreBAfter,
       history: [entry, ...rebuilt.history],
     };
-
-    if (rebuilt.scoreA < xMark && rebuilt.scoreB < xMark) {
-      rebuilt.markedNineteen = null;
-    } else if (!rebuilt.markedNineteen) {
-      if (rebuilt.scoreA >= xMark) rebuilt.markedNineteen = 'a';
-      else if (rebuilt.scoreB >= xMark) rebuilt.markedNineteen = 'b';
-    }
 
     let winner: TeamId | null = null;
     if (rebuilt.scoreA >= state.targetScore) winner = 'a';
