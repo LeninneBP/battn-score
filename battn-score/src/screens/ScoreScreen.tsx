@@ -19,6 +19,8 @@ import { colors, fonts, spacing } from '../theme';
 import { TeamId, xMarkFor } from '../types';
 
 export const setupBgSource = require('../../assets/sappadine/card-rastrelli.png');
+/** Fondo delle Sappadine (monti + stelle alpine) per la coppia in X. */
+const xScenerySource = require('../../assets/sappadine/x-scenery.png');
 
 export function ScoreScreen({ onHome }: { onHome: () => void }) {
   const insets = useSafeAreaInsets();
@@ -483,6 +485,18 @@ function TeamScore({
 }) {
   return (
     <View style={[styles.teamCard, { borderColor: accent }]}>
+      {marked && (
+        <View style={styles.xSceneryBox} pointerEvents="none">
+          <Image
+            source={xScenerySource}
+            style={styles.xSceneryImage}
+            resizeMode="cover"
+            fadeDuration={0}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          />
+        </View>
+      )}
       {showSeries && (
         <View
           style={[styles.seriesBadge, { borderColor: accent }]}
@@ -601,7 +615,19 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     padding: 12,
     borderWidth: 1.5,
+    overflow: 'hidden',
   },
+  // Il box fissa la larghezza: l'Image da sola terrebbe la misura naturale.
+  xSceneryBox: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '55%',
+    opacity: 0.55,
+    overflow: 'hidden',
+  },
+  xSceneryImage: { width: '100%', height: '100%' },
   teamName: {
     fontFamily: fonts.bodyMedium,
     color: colors.muted,

@@ -23,19 +23,20 @@ export function CreditsScreen() {
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Tradizione</Text>
         <Text style={styles.line}>
-          Battn / Plodar Battn — gioco di carte di Sappada (Plodn), ispirato al Watten
-          alpino e tenuto vivo in valle.
+          Battn / Plodar Battn — gioco di carte tradizionale di Sappada (Plodn),tramandato di generazioni in generazioni e ancora oggi
+          parte viva della socialità e della cultura della valle.
         </Text>
       </View>
 
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Le Sappadine</Text>
         <Text style={styles.line}>
-          Mazzo locale stampato da Dal Negro. Illustrazioni di Giorgio Berg (Giorgio
-          Costan Durigon). Progetto dell’associazione Mario con noi.
+          Le Sappadine è il mazzo di carte dedicato al Battn e alla cultura di Sappada 
+          Stampato da Dal Negro, con le illustrazioni di Giorgio Berg (Giorgio
+          Costan Durigon), nasce da un progetto dell’Associazione Mario con noi per valorizzare e mantenere viva la tradizione del Battn.
         </Text>
         <AppButton
-          label="Apri lesappadine.com"
+          label="Scopri Le Sappadine"
           variant="ice"
           compact
           onPress={() => Linking.openURL('https://www.lesappadine.com/')}
