@@ -21,6 +21,7 @@ import { TeamId, xMarkFor } from '../types';
 export const setupBgSource = require('../../assets/sappadine/card-rastrelli.png');
 /** Fondo delle Sappadine (monti + stelle alpine) per la coppia in X. */
 const xScenerySource = require('../../assets/sappadine/x-scenery.png');
+const X_SCENERY_RATIO = 440 / 326;
 
 export function ScoreScreen({ onHome }: { onHome: () => void }) {
   const insets = useSafeAreaInsets();
@@ -483,13 +484,22 @@ function TeamScore({
   onPlus: () => void;
   onMinus: () => void;
 }) {
+  const [card, setCard] = useState({ width: 0, height: 0 });
+  // Misure esplicite: la filigrana tiene le proporzioni della carta e resta
+  // attaccata in basso. Il box la taglia in alto, dove è già sfumata.
+  const sceneryHeight = Math.round(card.width / X_SCENERY_RATIO);
+  const sceneryBoxHeight = Math.min(sceneryHeight, Math.round(card.height * 0.72));
+
   return (
-    <View style={[styles.teamCard, { borderColor: accent }]}>
-      {marked && (
-        <View style={styles.xSceneryBox} pointerEvents="none">
+    <View
+      style={[styles.teamCard, { borderColor: accent }]}
+      onLayout={(e) => setCard(e.nativeEvent.layout)}
+    >
+      {marked && card.width > 0 && (
+        <View style={[styles.xSceneryBox, { height: sceneryBoxHeight }]} pointerEvents="none">
           <Image
             source={xScenerySource}
-            style={styles.xSceneryImage}
+            style={[styles.xSceneryImage, { width: card.width, height: sceneryHeight }]}
             resizeMode="cover"
             fadeDuration={0}
             accessibilityElementsHidden
@@ -617,17 +627,15 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     overflow: 'hidden',
   },
-  // Il box fissa la larghezza: l'Image da sola terrebbe la misura naturale.
   xSceneryBox: {
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
-    height: '55%',
     opacity: 0.55,
     overflow: 'hidden',
   },
-  xSceneryImage: { width: '100%', height: '100%' },
+  xSceneryImage: { position: 'absolute', left: 0, bottom: 0 },
   teamName: {
     fontFamily: fonts.bodyMedium,
     color: colors.muted,
