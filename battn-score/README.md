@@ -60,6 +60,43 @@ Aceite outra porta (8082) ou mate o Expo antigo e rode de novo.
 
 **Cabo USB:** no iPhone com Expo Go **não** substitui a rede. Precisa tunnel/LAN (ou build nativo no Xcode, que precisa Mac).
 
+## Instalar de verdade no iPhone (Mac + Xcode, Apple ID grátis)
+
+Assim o app fica instalado como qualquer outro, abre offline e não depende do PC.
+Não precisa pagar os US$ 99: o Xcode assina com o **Personal Team** do seu Apple ID.
+A assinatura grátis **expira em 7 dias** (é só plugar no Mac e dar Run de novo) e
+permite no máximo 3 apps assim ao mesmo tempo.
+
+Requisitos do Mac: **Xcode 26.4+** (exigência do Expo SDK 57 / React Native 0.86),
+**Node 22.13+** e iPhone com **iOS 16.4+**.
+
+```bash
+git clone https://github.com/LeninneBP/battn-score.git
+cd battn-score/battn-score
+npm install
+npx expo prebuild --platform ios
+open ios/*.xcworkspace
+```
+
+O `prebuild` gera a pasta `ios/` nativa — ela está no `.gitignore` de propósito,
+porque é sempre regenerável a partir do `app.json`.
+
+No Xcode:
+
+1. Settings → Accounts → adicione seu Apple ID (o de sempre serve).
+2. Target **BATTN** → **Signing & Capabilities** → marque *Automatically manage
+   signing* e escolha seu nome em **Team**.
+3. Conecte o iPhone no cabo e selecione ele no lugar do simulador.
+4. **Product → Scheme → Edit Scheme → Run → Build Configuration = `Release`.**
+   Em `Debug` o app busca o JavaScript no servidor do Mac e não abre sozinho;
+   em `Release` o bundle vai embutido e o app funciona offline na mesa.
+5. `Cmd+R` para instalar.
+6. No iPhone: Ajustes → Geral → VPN e Gerenciamento de Dispositivo → toque no seu
+   Apple ID → **Confiar**.
+
+Com assinatura de desenvolvedor paga dá para pular o Mac: `eas build -p ios` gera
+o `.ipa` na nuvem, até rodando do Windows.
+
 ## O que já está pronto
 
 - Turno normal / Começar Orbi (com quem chamou)
@@ -70,7 +107,8 @@ Aceite outra porta (8082) ou mate o Expo antigo e rode de novo.
 - ±1 no placar + **apagar último**
 - **Soma** total no centro
 - Badge **X · 19** e vitória aos 21
-- **Revanche** com os mesmos nomes
+- **Revanche** com os mesmos nomes, com contador da série no canto de cada dupla
+  (1–0, 1–1… para melhor de 3, de 5 etc.)
 - Aba Critici rápida + regras completas + como jogar + créditos
 - Salva a partida no aparelho (offline)
 - Tela não apaga durante o jogo (keep-awake)
