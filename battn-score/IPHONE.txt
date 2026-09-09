@@ -1,0 +1,21 @@
+BATTN no iPhone — no teu PC (Windows)
+
+Daqui do Cursor NÃO dá para instalar no teu computador.
+Descarrega a pasta battn-score (ou o zip) e faz isto no PC:
+
+1. Instala Node.js LTS: https://nodejs.org
+   (marca “Add to PATH”)
+
+2. No iPhone: App Store → Expo Go → entra na tua conta Expo.
+
+3. No PC, na pasta battn-score:
+   - duplo clique em ABRIR-NO-IPHONE.bat
+   OU, no PowerShell:
+     cd caminho\para\battn-score
+     npm install
+     npx expo login
+     npx expo start
+
+4. Lê o QR com o Expo Go (não com a Câmara).
+   Mesma Wi-Fi. Mesma conta Expo no PC e no telemóvel.
+   Se o QR falhar: no terminal carrega T (Tunnel).

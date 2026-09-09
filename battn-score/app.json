@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "BATTN",
+    "slug": "battn-score",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "battn",
+    "primaryColor": "#B08A3E",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.battn.score",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleDisplayName": "BATTN",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.battn.score",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#F2EBDF",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "name": "BATTN",
+      "shortName": "BATTN",
+      "lang": "it",
+      "themeColor": "#F2EBDF",
+      "backgroundColor": "#F2EBDF",
+      "display": "standalone"
+    },
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F2EBDF"
+    },
+    "plugins": [
+      "expo-font",
+      "expo-asset"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a5649482-cbac-4bc6-8db0-4d041798c9f7"
+      }
+    },
+    "owner": "leninne44"
+  }
+}
